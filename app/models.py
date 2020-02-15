@@ -2,7 +2,7 @@ from . import db
 
 class Worker(db.Model):
 
-    workerID = db.Column(db.Integer, primary_key=True, autoincrement=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fname = db.Column(db.String(30))
     lname = db.Column(db.String(30))
     address1 = db.Column(db.String(100))
