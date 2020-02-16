@@ -8,3 +8,5 @@ https://github.com/uwi-info3180/flask-db-demo
 https://github.com/sagunsh/weather-app
 https://pythonhosted.org/
 https://gist.github.com/keeguon/2310008
+https://www.twilio.com/blog
+https://github.com/theskumar/python-dotenv

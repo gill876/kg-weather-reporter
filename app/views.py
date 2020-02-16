@@ -8,11 +8,14 @@ from flask_mail import Message
 import requests
 import json
 import os
+from dotenv import load_dotenv
+load_dotenv(verbose=True)
 
 @app.route('/')
 def home():
     """Render website's home page."""
     #db.create_all()
+    #test1 = type(os.getenv("TESTENV"))
     return render_template('home.html')
 
 @app.route('/addworker', methods=['GET', 'POST'])
@@ -39,10 +42,20 @@ def addWorker():
         flash_errors(worker)
     return render_template('addworker.html', form=workerF)
 
+@app.route('/etest')
+def send_email():
+    with app.app_context():
+        msg = Message(subject="Email test",
+                      sender=app.config.get("MAIL_USERNAME"),
+                      recipients=["microcargill@hotmail.com"],
+                      body="This is a test email I sent with Gmail and Python!")
+        mail.send(msg)
+    return 'email sent'
+
 @app.route('/wtest')
 #@app.route('/wtest/<city>')
 def search_city(city='Duncans', state='Trelawny', country='Jamaica'):
-    API_KEY = 'fec56359ccc84c262516ab2be4045b67'  # initialize your key here
+    API_KEY = os.getenv("WEATHER_API_KEY")  # initialize your key here
     jsonccode = None 
     ccode = None
     #return app.send_static_file(url_for('static', filename='/json/countries.json'))
