@@ -1,3 +1,47 @@
 body {
     padding-top: 5rem;
 }
+
+/*#forecast-row {
+    display: flexbox;
+    flex-direction: row;
+    align-content: space-between;
+    height: 120;
+    width: 250;
+}
+
+#forecast-card {
+    height: 100px;
+    width: 50;
+    background-color: black;
+    padding-left: 2px;
+    padding-right: 2px;
+}*/
+
+#forecast-row {
+    padding-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: auto;
+    align-content: start
+  }
+  /*#forecast-row:after {
+    display: block;
+    content: " placeholder ";
+    margin: 10px;
+    flex: 999 999 auto;
+  }*/
+  #forecast-card {
+    flex: 0 0 auto;
+    margin: 2px;
+  }
+
+  img {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1px;
+    width: 150px;
+    height: 150px;
+  }

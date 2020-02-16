@@ -1,9 +1,30 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h1>Flask Starter Code</h1>
+<h1>{{greeting_time}} Boss!</h1>
 {% include 'flash_messages.html' %}
 {{test1}}
-<p class="lead">Use this starter template for your Flask apps as a way to quickly start any new project.<br>
-All you get are these files and mostly barebones HTML/CSS files.</p>
+<p class="lead">You can send email notifications to all employees for tomorrow here.<br>
+This is the weather forecast for you today and rest of 4 days.<br><br>Smiley face means work! Sad face means no work...</p>
+<div id="forecast-row">
+    {% for output in outputs %}
+        {% if output[0] != 'Rain' %}
+            <div id="forecast-card">
+                <p class="daysOfWeek">{{output[1]}}</p>
+                <img src="{{url_for('static', filename='img/work.png')}}" alt="Let's go to work today!">
+            </div>
+        {% endif %}
+        {% if output[0] == 'Rain' %}
+            <div id="forecast-card">
+                <p class="daysOfWeek">{{output[1]}}</p>
+                <img src="{{url_for('static', filename='img/nowork.png')}}" alt="Don't go to work today">
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+<div>
+    <br><br><p class="lead">You can get the weather for the following time periods:</p>
+    <a href="{{url_for('sendTomorrow')}}" class="btn btn-primary">Send email to all workers for tomorrow!</a>
+    <a href="" class="btn btn-primary">Send email to all workers for tomorrow and the rest of the days!</a>
+</div>
 {% endblock %}

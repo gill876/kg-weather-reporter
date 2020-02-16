@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, request
+from flask import Flask, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
