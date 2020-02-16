@@ -1,3 +1,10 @@
 # kg-weather-reporter
 A weather reporter for Krace Gennedy (an evaluation project from PPT)
-Flask is considered to be used
+Flask was considered to be used
+
+Resources:
+https://flask-sqlalchemy.palletsprojects.com/
+https://github.com/uwi-info3180/flask-db-demo
+https://github.com/sagunsh/weather-app
+https://pythonhosted.org/
+https://gist.github.com/keeguon/2310008

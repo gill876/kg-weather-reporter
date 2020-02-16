@@ -5,7 +5,9 @@ from . import db
 from .forms import WorkerF
 from app import mail
 from flask_mail import Message
-
+import requests
+import json
+import os
 
 @app.route('/')
 def home():
@@ -36,6 +38,36 @@ def addWorker():
 
         flash_errors(worker)
     return render_template('addworker.html', form=workerF)
+
+@app.route('/wtest')
+#@app.route('/wtest/<city>')
+def search_city(city='Duncans', state='Trelawny', country='Jamaica'):
+    API_KEY = 'fec56359ccc84c262516ab2be4045b67'  # initialize your key here
+    jsonccode = None 
+    ccode = None
+    #return app.send_static_file(url_for('static', filename='/json/countries.json'))
+    with open(os.path.dirname(os.path.abspath(__file__)) + '/static/json/countries.json') as f: #this file directory format might not work in Windows
+        jsonccode = json.load(f)
+    for c_dict in jsonccode:
+        if c_dict.get('name') == country:
+            ccode = c_dict.get('code')
+
+    # call API and convert response into Python dictionary
+    url = f'http://api.openweathermap.org/data/2.5/forecast?q={city},{state},{ccode}&appid={API_KEY}'
+    response = requests.get(url).json()
+
+    #return response
+
+    # error like unknown city name, inavalid api key
+    if response.get("cod") != "200":
+        message = response.get('message', '')
+        return f'Error getting weather information for {city.title()}. Error message = {message}'
+
+    forecast = []
+    for i in range(2,40,8): #retrieves weather for five days at 6AM
+	    forecast+= [response.get('list')[i].get('weather')[0].get('main')]
+    
+    return render_template('home.html', test1 = forecast)
 
 ###
 # The functions below should be applicable to all Flask apps.
