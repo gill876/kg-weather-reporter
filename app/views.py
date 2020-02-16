@@ -42,6 +42,11 @@ def addWorker():
         flash_errors(worker)
     return render_template('addworker.html', form=workerF)
 
+@app.route('/viewworkers')
+def viewWorkers():
+    workers = Worker.query.all()
+    return render_template('viewworkers.html', workers=workers)
+
 @app.route('/etest')
 def send_email():
     with app.app_context():

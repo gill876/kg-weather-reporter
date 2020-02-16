@@ -10,3 +10,11 @@ https://pythonhosted.org/
 https://gist.github.com/keeguon/2310008
 https://www.twilio.com/blog
 https://github.com/theskumar/python-dotenv
+
+#####################.env file format:#######################
+export TESTENV="HELLOWORD"
+export SECRET_KEY='some random string'
+export MAIL_USERNAME='my email address'
+export MAIL_PASSWORD='my email address password'
+export WEATHER_API_KEY='my openweathermap.org/api api key'
+#############################################################
