@@ -65,19 +65,18 @@ def viewWorkers():
     workers = Worker.query.all()
     return render_template('viewworkers.html', workers=workers)
 
-@app.route('/etest')
-def send_email():
+@app.route('/etest')#############ONLY FOR TEST PURPOSES#################
+def send_email():#############ONLY FOR TEST PURPOSES#################
     with app.app_context():
         msg = Message(subject="Email test",
                       sender=app.config.get("MAIL_USERNAME"),
                       recipients=["microcargill@hotmail.com"],
                       body="This is a test email I sent with Gmail and Python!")
         mail.send(msg)
-    return 'email sent'
+    return 'email sent'#############ONLY FOR TEST PURPOSES#################
 
-@app.route('/wtest')
-#@app.route('/wtest/<city>')
-def search_city(city='Duncans', state='Trelawny', country='Jamaica'):
+@app.route('/wtest')#############ONLY FOR TEST PURPOSES#################
+def search_city(city='Duncans', state='Trelawny', country='Jamaica'):#############ONLY FOR TEST PURPOSES#################
     API_KEY = os.getenv("WEATHER_API_KEY")  # initialize your key here
     jsonccode = None 
     ccode = None
@@ -103,7 +102,7 @@ def search_city(city='Duncans', state='Trelawny', country='Jamaica'):
     for i in range(2,40,8): #retrieves weather for five days at 6AM
 	    forecast+= [response.get('list')[i].get('weather')[0].get('main')]
     
-    return render_template('home.html', test1 = forecast)
+    return render_template('home.html', test1 = forecast)#############ONLY FOR TEST PURPOSES#################
 
 def forecaster(city, state, country, hour_start):#Documentation for this function is in search_city()
     API_KEY = os.getenv("WEATHER_API_KEY")
@@ -129,7 +128,7 @@ def forecaster(city, state, country, hour_start):#Documentation for this functio
     
     return forecasts
 
-def getDays():
+def getDays():#gets the day of the week for each 5 day forecast
     day = datetime.today().weekday()
     loadDays = []
     day_lst = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']
@@ -143,6 +142,7 @@ def getDays():
         else:
             loadDays+=[day_lst[day]]
             day+=1
+        loadDays[0] = "Today" #changes the first forecast from a day of the week to today
     return loadDays
 
 @app.route('/tomorrow')
@@ -157,14 +157,14 @@ def sendTomorrow():
 
             if tomorrow_forecast[1] == 'Rain': #forecast for tomorrow
                 if worker.role == "IT":
-                    message = "Do not go on the road tomorrow\n\n\n\nRegards, {} {}".format(boss.fname, boss.lname)
+                    message = "Do not go on the road tomorrow\n\n\n\nRegards,\n {} {}".format(boss.fname, boss.lname)
                 else:
-                    message = "You are going to work for 4 hours tomorrow instead of 8 hours\n\n\n\nRegards, {} {}".format(boss.fname, boss.lname)
+                    message = "You are going to work for 4 hours tomorrow instead of 8 hours\n\n\n\nRegards,\n {} {}".format(boss.fname, boss.lname)
             else:
                 if worker.role == "IT":
-                    message = "Have fun at work tomorrow!\n\n\n\nRegards, {} {}".format(boss.fname, boss.lname)
+                    message = "Have fun at work tomorrow!\n\n\n\nRegards,\n {} {}".format(boss.fname, boss.lname)
                 else:
-                    message = "You will be working for 8 hours tomorrow\n\n\n\nRegards, {} {}".format(boss.fname, boss.lname)
+                    message = "You will be working for 8 hours tomorrow\n\n\n\nRegards,\n {} {}".format(boss.fname, boss.lname)
 
             subject = "Work for tomorrow, Mr.%s" % worker.lname
             msg = Message(recipients=[worker.email],
@@ -176,6 +176,38 @@ def sendTomorrow():
     flash('Email notification sent to all workers!', 'success')
     return redirect(url_for('home'))
 
+@app.route('/alldays')
+def sendAll():
+    workers = Worker.query.all()
+    boss = Worker.query.filter_by(role='Manager').first()
+    hour_start = 2 #time for 06:00-08:59
+
+    with mail.connect() as conn:
+        for worker in workers:
+            loadDays = getDays()
+            loadDays.pop(0)
+            forecasts = forecaster(worker.city, worker.state, worker.country, hour_start)
+            forecasts.pop(0)
+            outputs = zip(forecasts, loadDays)
+            for output in outputs:
+                if output[0] == 'Rain': #forecast for tomorrow
+                    if worker.role == "IT":
+                        message = "Do not go on the road {}\n\n\n\nRegards,\n {} {}".format(output[1], boss.fname, boss.lname)
+                    else:
+                        message = "You are going to work for 4 hours on {} instead of 8 hours\n\n\n\nRegards,\n {} {}".format(output[1], boss.fname, boss.lname)
+                else:
+                    if worker.role == "IT":
+                        message = "Have fun at work {}!\n\n\n\nRegards,\n {} {}".format(output[1], boss.fname, boss.lname)
+                    else:
+                        message = "You will be working for 8 hours {}\n\n\n\nRegards,\n {} {}".format(output[1], boss.fname, boss.lname)
+                subject = "Work for {}, Mr.{}".format(output[1], worker.lname)
+                msg = Message(recipients=[worker.email],
+                        sender=app.config.get("MAIL_USERNAME"),
+                        body=message,
+                        subject=subject)
+                conn.send(msg)
+    flash('Email notification for the 4 days sent to all workers!', 'success')
+    return redirect(url_for('home'))
 ###
 # The functions below should be applicable to all Flask apps.
 ###

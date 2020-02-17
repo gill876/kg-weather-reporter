@@ -8,7 +8,7 @@
 This is the weather forecast for you today and rest of 4 days.<br><br>Smiley face means work! Sad face means no work...</p>
 <div id="forecast-row">
     {% for output in outputs %}
-        {% if output[0] != 'Rain' %}
+        {% if output[0] != 'Rain' %} {#The kind of weather followed by days of the five days forecast#}
             <div id="forecast-card">
                 <p class="daysOfWeek">{{output[1]}}</p>
                 <img src="{{url_for('static', filename='img/work.png')}}" alt="Let's go to work today!">
@@ -23,8 +23,8 @@ This is the weather forecast for you today and rest of 4 days.<br><br>Smiley fac
     {% endfor %}
 </div>
 <div>
-    <br><br><p class="lead">You can get the weather for the following time periods:</p>
+    <br><br><!--<p class="lead">You can get the weather for the following time periods:</p>-->
     <a href="{{url_for('sendTomorrow')}}" class="btn btn-primary">Send email to all workers for tomorrow!</a>
-    <a href="" class="btn btn-primary">Send email to all workers for tomorrow and the rest of the days!</a>
+    <a href="{{url_for('sendAll')}}" class="btn btn-primary">Send email to all workers for tomorrow and the rest of the days!</a>
 </div>
 {% endblock %}
